@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id "org.flywaydb.flyway" version "5.2.4"
+}
+
+group 'project.sidecar-health-project'
+version '1.0-SNAPSHOT'
+
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.2.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.2.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.2.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: '2.2.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.2.2.RELEASE'
+    compile "org.flywaydb:flyway-core:5.2.4"
+
+
+    compile group: 'com.google.guava', name: 'guava', version: 'r05'
+    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.3.1.RELEASE'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
+    compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test:2.2.1.RELEASE')
+    testCompile('org.junit.jupiter:junit-jupiter-engine:5.4.2')
+    testCompile('io.projectreactor:reactor-test:3.2.8.RELEASE')
+    testCompile("org.mockito:mockito-junit-jupiter:3.0.0")
+}
+
+task migrateDatabaseLocal(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = 'jdbc:mysql://127.0.0.1:3306/sidecar_health?serverTimezone=UTC'
+    user = 'root'
+    password = '123456Aa'
+}
+
+test {
+    testLogging {
+        displayGranularity 2
+        events "FAILED", "SKIPPED"
+        exceptionFormat "FULL"
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                println "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+            }
+        }
+    }
+    useJUnitPlatform()
+}

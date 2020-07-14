@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+    id 'com.github.sherter.google-java-format' version '0.8'
+}
+
+group 'com.project'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+}

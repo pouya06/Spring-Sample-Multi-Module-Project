@@ -1,0 +1,4 @@
+rootProject.name = 'sidecar-health-project'
+include 'application'
+include 'core'
+
